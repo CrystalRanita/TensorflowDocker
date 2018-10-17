@@ -59,7 +59,18 @@ RUN ${PIP} install ${TF_PACKAGE}
 COPY bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
 
-RUN ${PIP} install jupyter
+RUN ${PIP} --no-cache-dir install \
+        Pillow \
+        h5py \
+        ipykernel \
+        jupyter \
+        keras_applications \
+        keras_preprocessing \
+        matplotlib \
+        numpy \
+        pandas \
+        scipy \
+        sklearn
 
 RUN mkdir /notebooks && chmod a+rwx /notebooks
 RUN mkdir /.local && chmod a+rwx /.local
