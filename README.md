@@ -17,8 +17,22 @@ $ docker build -f ./dockerfiles/cpu-jupyter.Dockerfile -t tf .
 Run with -v to shared directory from your local directory.
 
 ```bash
+# Images with tensorboard run on port 6006, and needs a volume for notebooks
+$ docker run \
+  --name tensorboard \
+  --user $(id -u):$(id -g) \
+  -p 6006:6006 \
+  -v $(pwd):/notebooks \
+  -it tf \
+  tensorboard --logdir tsboardDir
+# On Mac I test $(pwd)/tsboardDir but always display
+# "No dashboards are active for the current data set." on browser.
+# Works well after remove "$(pwd)"
+```
+
+```bash
 # Images with Jupyter run on port 8888, and needs a volume for notebooks
-$ docker run --user $(id -u):$(id -g) -p 8888:8888 -v $(pwd)/workdir:/notebooks -it tf
+$ docker run --name jupyter --user $(id -u):$(id -g) -p 8888:8888 -v $(pwd):/notebooks -it tf
 ```
 
 After running, you can get a token for jupyter.
@@ -30,3 +44,15 @@ http://localhost:8888/
 
 Click right-top side `new` -> `Python3` to try your python code.
 Ctrl+Enter to enter cmd.
+
+## Tensorboard
+
+Launch browser, link with:
+http://localhost:6006/
+
+## Start/Stop containers
+
+```bash
+$ docker stop/start jupyter
+$ docker stop/start tensorboard
+```
