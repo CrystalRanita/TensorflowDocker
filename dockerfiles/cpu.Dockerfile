@@ -47,9 +47,24 @@ RUN apt-get update && apt-get install -y \
     ${PYTHON} \
     ${PYTHON}-pip
 
+RUN ln -s /usr/bin/python3.5 /usr/bin/python
+RUN python --version
+
 RUN ${PIP} install --upgrade \
     pip \
     setuptools
+
+RUN ${PIP} --no-cache-dir install \
+        Pillow \
+        h5py \
+        ipykernel \
+        keras_applications \
+        keras_preprocessing \
+        matplotlib \
+        numpy \
+        pandas \
+        scipy \
+        sklearn
 
 ARG TF_PACKAGE=tensorflow
 RUN ${PIP} install ${TF_PACKAGE}

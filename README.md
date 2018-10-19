@@ -9,7 +9,7 @@ See ORI_README.md for more detail
 Build from dockerfile to create image, `tf` is tag.
 
 ```bash
-$ docker build -f ./dockerfiles/cpu-jupyter.Dockerfile -t tf .
+$ docker build -f ./dockerfiles/cpu.Dockerfile -t tf .
 ```
 
 ## Running
@@ -17,33 +17,26 @@ $ docker build -f ./dockerfiles/cpu-jupyter.Dockerfile -t tf .
 Run with -v to shared directory from your local directory.
 
 ```bash
-# Images with tensorboard run on port 6006, and needs a volume for notebooks
+# Images with tensorboard run on port 6006, and needs a volume for workdir
 $ docker run \
   --name tensorboard \
   --user $(id -u):$(id -g) \
   -p 6006:6006 \
-  -v $(pwd):/notebooks \
+  -v $(pwd):/workdir \
   -it tf \
-  tensorboard --logdir tsboardDir
+  tensorboard --logdir pyDir
 # On Mac I test $(pwd)/tsboardDir but always display
 # "No dashboards are active for the current data set." on browser.
 # Works well after remove "$(pwd)"
 ```
-
 ```bash
-# Images with Jupyter run on port 8888, and needs a volume for notebooks
-$ docker run --name jupyter --user $(id -u):$(id -g) -p 8888:8888 -v $(pwd):/notebooks -it tf
+# Images with bash
+$ docker run --name bashCmd --user $(id -u):$(id -g) -v $(pwd):/workdir -it tf /bin/bash
 ```
-
-After running, you can get a token for jupyter.
 
 ## Jupyter
 
-Launch browser, link with token:
-http://localhost:8888/
-
-Click right-top side `new` -> `Python3` to try your python code.
-Ctrl+Enter to enter cmd.
+Removed due to cannot display event file on tensorboard and cannot display running plot.
 
 ## Tensorboard
 
@@ -53,6 +46,5 @@ http://localhost:6006/
 ## Start/Stop containers
 
 ```bash
-$ docker stop/start jupyter
 $ docker stop/start tensorboard
 ```
