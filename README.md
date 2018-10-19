@@ -1,7 +1,7 @@
 # TensorFlow Dockerfiles
 
 Base on:
-https://github.com/tensorflow/tensorflow/tree/master/tensorflow/tools/dockerfiles
+https://github.com/tensorflow/tensorflow/tree/master/tensorflow/tools/dockerfiles  
 See ORI_README.md for more detail
 
 ## Building
@@ -24,7 +24,8 @@ $ docker run \
   -p 6006:6006 \
   -v $(pwd):/workdir \
   -it tf \
-  tensorboard --logdir pyDir
+  tensorboard --logdir workdir/pyDir
+# Place event file under workdir/pyDir to display on tensorboard.
 # On Mac I test $(pwd)/tsboardDir but always display
 # "No dashboards are active for the current data set." on browser.
 # Works well after remove "$(pwd)"
@@ -34,17 +35,34 @@ $ docker run \
 $ docker run --name bashCmd --user $(id -u):$(id -g) -v $(pwd):/workdir -it tf /bin/bash
 ```
 
-## Jupyter
+## Edit Files
 
-Removed due to cannot display event file on tensorboard and cannot display running plot.
+On your local side install software to edit .py files.
+Such as Visual Studio Code.
+
+## Build .py
+
+On bashCmd container terminal run floowing command to build .py
+
+```bash
+# run cmd ex. python test.py
+$ python YOUR_PY_FILE_NAME
+```
 
 ## Tensorboard
 
-Launch browser, link with:
-http://localhost:6006/
+After Create "evnet" file by run .py  
+(you need to write some code about tensorboard in .py to create event file.)  
+Launch browser, link with: http://localhost:6006/
 
 ## Start/Stop containers
 
 ```bash
 $ docker stop/start tensorboard
 ```
+
+## Known Issue
+
+Jupyter: In this dockerfile, run on Mac platform cannot display event file on tensorboard
+ and cannot display running plot. Current cannot find solution.
+ Add "%matplotlib notebook" on the top of .py file can display plot but cannot running.

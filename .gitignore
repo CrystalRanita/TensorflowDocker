@@ -1,0 +1,4 @@
+*.ipynb
+workdir/*
+.DS_Store
+pyDir/*
