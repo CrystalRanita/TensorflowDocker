@@ -58,8 +58,8 @@ RUN ${PIP} --no-cache-dir install \
         Pillow \
         h5py \
         ipykernel \
-        keras_applications \
-        keras_preprocessing \
+        jupyter \
+        keras \
         matplotlib \
         numpy \
         pandas \
@@ -68,6 +68,11 @@ RUN ${PIP} --no-cache-dir install \
 
 ARG TF_PACKAGE=tensorflow
 RUN ${PIP} install ${TF_PACKAGE}
+
+RUN mkdir /notebooks && chmod a+rwx /notebooks
+RUN mkdir /.local && chmod a+rwx /.local
+WORKDIR /notebooks
+EXPOSE 8888
 
 COPY bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
