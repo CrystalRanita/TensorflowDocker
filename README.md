@@ -39,6 +39,8 @@ $ docker run --name bashCmd --user $(id -u):$(id -g) -v $(pwd):/workdir -it tf /
 ```bash
 # cmd1: container with jupyter
 $ docker run --user $(id -u):$(id -g) -p 8888:8888 -v $(pwd):/notebooks -it tfs
+# cmd2: cd to notebooks dir
+$ cd /notebooks
 # cmd2: run following cmd in container to start jupyter
 $ ./tools/run_jupyter.sh
 # Launch browser, link with: http://localhost:8888/ and input token (after run cmd1 you can get a token).
@@ -74,7 +76,7 @@ $ docker stop/start tensorboard
 
 Jupyter: In this dockerfile, run on Mac platform cannot display event file on tensorboard
 and cannot display running plot. Current cannot find solution.
-Add "%matplotlib notebook" on the top of .py file can display plot but cannot running.
+Add "%matplotlib inline" on the top of .py file can display plot but cannot running.
 
 ## Jupyter Cmd
 

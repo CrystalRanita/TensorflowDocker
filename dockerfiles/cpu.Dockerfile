@@ -71,7 +71,6 @@ RUN ${PIP} install ${TF_PACKAGE}
 
 RUN mkdir /notebooks && chmod a+rwx /notebooks
 RUN mkdir /.local && chmod a+rwx /.local
-WORKDIR /notebooks
 EXPOSE 8888
 
 COPY bashrc /etc/bash.bashrc
