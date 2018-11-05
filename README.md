@@ -38,7 +38,7 @@ $ docker run --name bashCmd --user $(id -u):$(id -g) -v $(pwd):/workdir -it tf /
 
 ```bash
 # cmd1: container with jupyter
-$ docker run --user $(id -u):$(id -g) -p 8888:8888 -v $(pwd):/notebooks -it tfs
+$ docker run --user $(id -u):$(id -g) -p 8888:8888 -v $(pwd):/notebooks -it tf
 # cmd2: cd to notebooks dir
 $ cd /notebooks
 # cmd2: run following cmd in container to start jupyter
