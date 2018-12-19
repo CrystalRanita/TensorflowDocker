@@ -44,6 +44,8 @@ ARG PYTHON=python${_PY_SUFFIX}
 ARG PIP=pip${_PY_SUFFIX}
 
 RUN apt-get update && apt-get install -y \
+    openjdk-8-jdk \
+    wget \
     ${PYTHON} \
     ${PYTHON}-pip
 
@@ -64,15 +66,27 @@ RUN ${PIP} --no-cache-dir install \
         numpy \
         pandas \
         scipy \
-        sklearn
+        sklearn \
+        virtualenv
 
-ARG TF_PACKAGE=tensorflow
-RUN ${PIP} install ${TF_PACKAGE}
+ARG SPARK_FILE=spark-2.1.1-bin-hadoop2.7.tgz
+ARG SPARK_PATH=/opt/apache-spark/
+ARG SPARK_LINK=https://archive.apache.org/dist/spark/spark-2.1.1/${SPARK_FILE}
+ARG SPARK_STORE_ROOT=/opt/apache-spark/
+RUN mkdir -p ${SPARK_PATH}
+RUN wget ${SPARK_LINK} -P ${SPARK_STORE_ROOT}
+RUN tar xvzf ${SPARK_STORE_ROOT}/${SPARK_FILE} -C ${SPARK_PATH}
+# RUN rm ${SPARK_STORE_ROOT}/${SPARK_FILE}
+# This file download takes a long time so keep it in image.
+# If add other sw run build will be faster.
+
+# ARG TF_PACKAGE=tensorflow
+# RUN ${PIP} install ${TF_PACKAGE}
 
 RUN mkdir /notebooks && chmod a+rwx /notebooks
 RUN mkdir /.local && chmod a+rwx /.local
 EXPOSE 8888
 
-COPY bashrc /etc/bash.bashrc
+COPY bashrc_spark /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
 CMD ["bash", "-c", "source /etc/bash.bashrc"]

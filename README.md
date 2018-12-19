@@ -33,7 +33,7 @@ $ docker run \
 ```
 ```bash
 # container with bash
-$ docker run --name bashCmd --user $(id -u):$(id -g) -v $(pwd):/workdir -it tf /bin/bash
+$ docker run --name bashCmd -v $(pwd):/workdir -it tf /bin/bash
 ```
 
 ```bash
@@ -82,7 +82,7 @@ Add "%matplotlib inline" on the top of .py file can display plot but cannot runn
 
 'Esc + d' twice to remove blank line.
 
- ## Docker Cmd
+## Docker Cmd
 
 ```bash
 # In ./tools/cleanup.sh
@@ -94,4 +94,17 @@ $ docker rm $(docker ps -a -q)
 
 # Remove all images
 $ docker rmi $(docker images -a -q)
+```
+
+## Spark Image build
+
+```bash
+$ docker build -f ./dockerfiles/cpu-spark.Dockerfile -t spark .
+```
+
+## Spark Cmd
+```bash
+# container with bash
+$ cd ${your_workdir}
+$ docker run --name sparkCmd -v $(pwd):/workdir -it spark /bin/bash
 ```
