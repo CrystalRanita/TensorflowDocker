@@ -44,6 +44,9 @@ ARG PYTHON=python${_PY_SUFFIX}
 ARG PIP=pip${_PY_SUFFIX}
 
 RUN apt-get update && apt-get install -y \
+    net-tools \
+    vim \
+    virtualenv \
     openjdk-8-jdk \
     wget \
     ${PYTHON} \
@@ -69,14 +72,30 @@ RUN ${PIP} --no-cache-dir install \
         sklearn \
         virtualenv
 
-ARG SPARK_FILE=spark-2.1.1-bin-hadoop2.7.tgz
+ARG HADOOP_VER=hadoop-2.9.2
+ARG HADOOP_FILE=${HADOOP_VER}.tar.gz
+ARG HADOOP_LINK=http://apache.stu.edu.tw/hadoop/common/${HADOOP_VER}/${HADOOP_FILE}
+ARG HADOOP_PATH=/opt/hadoop/
+RUN mkdir -p ${HADOOP_PATH}
+RUN wget ${HADOOP_LINK} -P ${HADOOP_PATH}
+RUN tar xvzf ${HADOOP_PATH}/${HADOOP_FILE} -C ${HADOOP_PATH}
+
+ARG SPARK_VER=spark-2.1.1
+ARG SPARK_HADOOP_VER=${SPARK_VER}-bin-hadoop2.7
+ARG SPARK_FILE=${SPARK_HADOOP_VER}.tgz
 ARG SPARK_PATH=/opt/apache-spark/
-ARG SPARK_LINK=https://archive.apache.org/dist/spark/spark-2.1.1/${SPARK_FILE}
-ARG SPARK_STORE_ROOT=/opt/apache-spark/
+ARG SPARK_LINK=https://archive.apache.org/dist/spark/${SPARK_VER}/${SPARK_FILE}
 RUN mkdir -p ${SPARK_PATH}
-RUN wget ${SPARK_LINK} -P ${SPARK_STORE_ROOT}
-RUN tar xvzf ${SPARK_STORE_ROOT}/${SPARK_FILE} -C ${SPARK_PATH}
-# RUN rm ${SPARK_STORE_ROOT}/${SPARK_FILE}
+RUN wget ${SPARK_LINK} -P ${SPARK_PATH}
+RUN tar xvzf ${SPARK_PATH}/${SPARK_FILE} -C ${SPARK_PATH}
+RUN cp ${SPARK_PATH}/${SPARK_HADOOP_VER}/conf/slaves.template ${SPARK_PATH}/${SPARK_HADOOP_VER}/conf/slaves
+RUN cp ${SPARK_PATH}/${SPARK_HADOOP_VER}/conf/spark-env.sh.template ${SPARK_PATH}/${SPARK_HADOOP_VER}/conf/spark-env.sh
+COPY tools/spark-env.sh ${SPARK_PATH}/${SPARK_HADOOP_VER}/conf/spark-env.sh
+# Place IP in tools/slaves file bottom
+COPY tools/slaves ${SPARK_PATH}/${SPARK_HADOOP_VER}/conf/slaves
+RUN chmod a+rwx ${SPARK_PATH}/${SPARK_HADOOP_VER}/conf/spark-env.sh
+
+# RUN rm ${SPARK_PATH}/${SPARK_FILE}
 # This file download takes a long time so keep it in image.
 # If add other sw run build will be faster.
 
